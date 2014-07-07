@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+
+<script type="text/javascript" src="jquery-2.1.1.js"></script>
+
+<script type="text/javascript">
+
+		// http://www.virtuelle-mikroskopie.de/slideserver/slideserver.aspx?application=example&slide=/Zervix-29/Zervix-29.vsf&quality=85&opt=getimagedims
+		// http://www.virtuelle-mikroskopie.de/slideserver/slideserver.aspx?application=example&slide=/Zervix-29/Zervix-29.vsf&quality=85&opt=getimageresolution
+		// http://www.virtuelle-mikroskopie.de/slideserver/slideserver.aspx?application=example&slide=/Zervix-29/Zervix-29.vsf&quality=85&opt=getthumbnail&scrw=400&scrh=400
+
+		var baseUrl = "http://www.virtuelle-mikroskopie.de/slideserver/slideserver.aspx?application=example&slide=/Zervix-29/Zervix-29.vsf";
+		var imgSrc = "";
+		var thumbnailSrc = "";
+		var slideW = 800;
+		var slideH = 800;		
+		var srcW = 400;
+		var srcH = 400;	
+		var dimx = 93696; // whole dimension
+		var dimy = 100352; // whole dimension
+		var posX = 46000;
+		var posY = 50000;
+		var ratioy = Math.round(dimy/dimx);		
+
+		$(document).ready(function() {
+
+			if(imgSrc.length < 1 || imgSrc == "" ) {
+				imgSrc = baseUrl + "&quality=85&opt=getregion&posx=" + posX + "&posy=" + posY + "&slidew=" + slideW + "&slideh=" + slideH + "&scrw=" + srcW + "&scrh=" + srcH;
+				$('#image').attr('src', imgSrc);
+			}
+			if(thumbnailSrc.length < 1 || thumbnailSrc == "") {
+				thumbnailSrc = baseUrl + "&quality=85&opt=getthumbnail&scrw=" + srcW/ratioy +"&scrh=" + srcH;
+				$('#thumbnail').attr('src', thumbnailSrc);
+			}
+
+			$('#zoomIn').click(function() {
+				console.log("ZoomIn");								
+				var newZoom = srcW / (slideW * 0.5);
+				console.log(newZoom);
+				
+				if(!(newZoom > 1)) {
+					slideW *= 0.5;
+					slideH *= 0.5;
+					posX += (srcW / 2) / newZoom;
+					posY += (srcH / 2) / newZoom;
+					addSrcUrl();
+				} else {
+					console.log("No zoom more than 100%");
+				}
+			});
+			$('#zoomOut').click(function() {
+				console.log("ZoomOut");
+				
+				var newZoom = srcW / (slideW / 0.5);
+				var currentZoom = srcW / slideW;
+				console.log(newZoom);
+
+				// TODO: aus der Mitte des Ausschnitts herauszoomen
+				if(!(newZoom < 0.01)){
+					slideW /= 0.5;
+					slideH /= 0.5;
+					// posX += (srcW / 4);
+					// posY += (srcH / 4);
+					addSrcUrl();
+				} else {
+					console.log("Too much zoom out");
+				}
+			});
+			$('#right').click(function() {
+				console.log("Right");
+				var zoom = calcZoom();
+				if(!((posX + srcW / zoom) > (dimx - srcW / zoom))) {
+					posX += srcW / zoom;					
+					addSrcUrl();
+				} else {
+					console.log("Dim Error");
+				}				
+			});
+			$('#left').click(function() {
+				console.log("Left");
+				var zoom = calcZoom();
+				if(!((posX - srcW / zoom) < 0)) {
+					posX -= srcW / zoom;					
+					addSrcUrl();
+				} else {
+					console.log("Dim Error");
+				}		
+			});
+			$('#up').click(function() {
+				console.log("Up");				
+				var zoom = calcZoom();
+				if(!((posY - srcH / zoom) < 0)) {
+					posY -= srcH / zoom;					
+					addSrcUrl();
+				} else {
+					console.log("Dim Error");
+				}				
+			});
+			$('#down').click(function() {
+				console.log("Down");
+				var zoom = calcZoom();				
+				if(!((posY + srcH / zoom) > (dimy - srcH / zoom))) {
+					posY += srcH / zoom;					
+					addSrcUrl();
+				} else {
+					console.log("Dim Error");
+				}				
+			});
+		});
+
+		function addSrcUrl() {
+			imgSrc = baseUrl + "&quality=85&opt=getregion&posx=" + posX + "&posy=" + posY + "&slidew=" + slideW + "&slideh=" + slideH + "&scrw=" + srcW + "&scrh=" + srcH;
+			$('#image').attr('src', imgSrc);
+		}
+
+		function calcZoom() {
+			return srcW / slideW;
+		}
+
+</script>
+</head>
+<body>
+<h1>Bilder</h1><br>
+<h2>Übersicht</h2><br>
+<img id="thumbnail" alt="Thumbnail missing" width="200px;" height="200px;"/>
+
+<h2>Großes Bild</h2><br>
+<img id="image" alt="Image missing" width="400px;" height="400px;"/> 
+<p></p>
+
+<input type="button" id="zoomIn" value="Zoom-In" style="width: 80px" />
+<input type="button" id="zoomOut" value="Zoom-Out" style="width: 80px" />
+<br>
+<input type="button" id="left" value="Left" style="width: 80px" />
+<input type="button" id="right" value="Right" style="width: 80px" />
+<input type="button" id="up" value="Up" style="width: 80px" />
+<input type="button" id="down" value="Down" style="width: 80px" />
+
+</body>
+</html>
+

@@ -1,0 +1,13 @@
+Schritte:
+
+1. dicomserver1413.zip an beliebige Stelle entpacken
+2. ConquestDICOMServer.exe ausführen
+3. windowsmanual.pdf öffnen
+4. Interne Datenbank - DBaseIII auswählen.
+5. On Configuration Tab: -> Save configuration, l
+5.1 Leave everything as default: Port: 5678
+6. On Installation Tab: Follow the manual page to perform installation.
+6.1 Hit "Verify TCP/IP Installation" button
+6.2 Hit "Verify database installation" button
+7. Client
+
