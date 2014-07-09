@@ -53,16 +53,15 @@
 			$('#zoomOut').click(function() {
 				console.log("ZoomOut");
 				
-				var newZoom = srcW / (slideW / 0.5);
-				var currentZoom = srcW / slideW;
-				console.log(newZoom);
+				var newSlideW = slideW / 0.5;
+				var newSlideH = slideH / 0.5;
+				var newZoom = srcW / (newSlideW / 0.5);
 
-				// TODO: aus der Mitte des Ausschnitts herauszoomen
 				if(!(newZoom < 0.01)){
-					slideW /= 0.5;
-					slideH /= 0.5;										
-					posX -= (srcW) * newZoom;
-					posY -= (srcH) * newZoom;
+					slideW = newSlideW;
+					slideH = newSlideH;										
+					posX -= (srcW * 2) * newZoom;
+					posY -= (srcH * 2) * newZoom;
 					addSrcUrl();
 				} else {
 					console.log("Too much zoom out");
