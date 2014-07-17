@@ -60,8 +60,8 @@
 				if(!(newZoom < 0.01)){
 					slideW = newSlideW;
 					slideH = newSlideH;										
-					posX -= (srcW * 2) * newZoom;
-					posY -= (srcH * 2) * newZoom;
+					posX -= Math.round((srcW * 2) * newZoom);
+					posY -= Math.round((srcH * 2) * newZoom);
 					addSrcUrl();
 				} else {
 					console.log("Too much zoom out");
