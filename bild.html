@@ -55,13 +55,13 @@
 				
 				var newSlideW = slideW / 0.5;
 				var newSlideH = slideH / 0.5;
-				var newZoom = srcW / (newSlideW / 0.5);
+				var newZoom = srcW / (newSlideW * 0.5);
 
 				if(!(newZoom < 0.01)){
 					slideW = newSlideW;
 					slideH = newSlideH;										
-					posX -= Math.round((srcW * 2) * newZoom);
-					posY -= Math.round((srcH * 2) * newZoom);
+					posX -= Math.round((srcW / 2) / newZoom);
+					posY -= Math.round((srcH / 2) / newZoom);
 					addSrcUrl();
 				} else {
 					console.log("Too much zoom out");
