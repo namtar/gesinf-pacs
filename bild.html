@@ -2,6 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
 <script type="text/javascript" src="jquery-2.1.1.js"></script>
 
@@ -41,11 +42,17 @@
 				console.log(newZoom);
 				
 				if(!(newZoom > 1)) {
-					slideW *= 0.5;
-					slideH *= 0.5;
-					posX += (srcW / 2) / newZoom;
-					posY += (srcH / 2) / newZoom;
-					addSrcUrl();
+					var wOffset = (srcW / 2) / newZoom;
+					var hOffset = (srcH / 2) / newZoom;
+					if((posX + wOffset) > dimx || (posY + hOffset) > dimy) {
+						console.log("Zoom in not possible because it would be out of bounds.");
+					} else {
+						slideW *= 0.5;
+						slideH *= 0.5;
+						posX += wOffset;
+						posY += hOffset;
+						addSrcUrl();
+					}
 				} else {
 					console.log("No zoom more than 100%");
 				}
@@ -57,12 +64,18 @@
 				var newSlideH = slideH / 0.5;
 				var newZoom = srcW / (newSlideW * 0.5);
 
-				if(!(newZoom < 0.01)){
-					slideW = newSlideW;
-					slideH = newSlideH;										
-					posX -= Math.round((srcW / 2) / newZoom);
-					posY -= Math.round((srcH / 2) / newZoom);
-					addSrcUrl();
+				if(!(newZoom < 0.01)){					
+					var wOffset = Math.round((srcW / 2) / newZoom);	
+					var hOffset = Math.round((srcH / 2) / newZoom);
+					if((posX - wOffset) < 0 || (posY - hOffset) < 0 || (posX - wOffset + newSlideW) > dimx || (posY - hOffset + newSlideH) > dimy) {
+						console.log("Zoom out not possible because it would be out of bounds.");
+					} else {
+						slideW = newSlideW;
+						slideH = newSlideH;
+						posX -= wOffset;
+						posY -= hOffset;
+						addSrcUrl();
+					}
 				} else {
 					console.log("Too much zoom out");
 				}
